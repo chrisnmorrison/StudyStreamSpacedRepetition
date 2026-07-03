@@ -55,7 +55,7 @@ Build complete. To install manually:
        manifest.json
        styles.css
   5. In Obsidian: Settings → Community plugins → reload, then enable
-     "VaultRecall".
+	   "StudyStream SR".
 `);
 	process.exit(0);
 } else {

@@ -4,7 +4,7 @@ All notable changes to this project will be documented here.
 
 ## [0.1.0] — 2026-05-07
 
-Beta release. Errors may occur; please report issues at https://github.com/chrisnmorrison/vaultrecall/issues.
+Beta release. Errors may occur; please report issues at https://github.com/chrisnmorrison/vaultrecall/issues for StudyStream SR.
 
 ### Added
 - Navigate Mode: sequential note review with SM-2 spaced repetition scheduling

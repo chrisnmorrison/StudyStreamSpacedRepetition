@@ -67,7 +67,7 @@ export default class VaultRecallPlugin extends Plugin {
 		);
 		this.updateStatusBar();
 
-		this.addRibbonIcon("graduation-cap", "VaultRecall: start review session", () => {
+		this.addRibbonIcon("graduation-cap", "StudyStream SR: start review session", () => {
 			this.startDefaultFolderSession();
 		});
 
@@ -238,7 +238,7 @@ export default class VaultRecallPlugin extends Plugin {
 			? collectStudyQueues(this.app, folder, this.settings.records)
 			: { due: [], new: [] };
 		new Notice(
-			`VaultRecall\nReviewed today: ${reviewedToday}\nDue in default folder: ${queues.due.length}\nNew in default folder: ${queues.new.length}`
+			`StudyStream SR\nReviewed today: ${reviewedToday}\nDue in default folder: ${queues.due.length}\nNew in default folder: ${queues.new.length}`
 		);
 	}
 
@@ -255,12 +255,12 @@ export default class VaultRecallPlugin extends Plugin {
 	private startDefaultFolderSession(): void {
 		const path = this.settings.defaultFolder;
 		if (!path) {
-			new Notice("VaultRecall: set a default folder in settings first.");
+			new Notice("StudyStream SR: set a default folder in settings first.");
 			return;
 		}
 		const abstract = this.app.vault.getAbstractFileByPath(path);
 		if (!(abstract instanceof TFolder)) {
-			new Notice(`VaultRecall: folder "${path}" not found in vault.`);
+			new Notice(`StudyStream SR: folder "${path}" not found in vault.`);
 			return;
 		}
 		void this.startNavigateSession(abstract);
@@ -276,7 +276,7 @@ export default class VaultRecallPlugin extends Plugin {
 		);
 		const total = queues.due.length + queues.new.length;
 		if (total === 0) {
-			new Notice("VaultRecall: no due or new cards in this folder.");
+			new Notice("StudyStream SR: no due or new cards in this folder.");
 			return;
 		}
 
@@ -297,13 +297,13 @@ export default class VaultRecallPlugin extends Plugin {
 
 		await this.session.openCurrent();
 		new Notice(
-			`VaultRecall: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
+			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
 		);
 	}
 
 	async startQuizSession(folder: TFolder): Promise<void> {
 		if (!this.settings.apiKey) {
-			new Notice("VaultRecall: add an API key in settings to use AI Quiz.");
+			new Notice("StudyStream SR: add an API key in settings to use AI Quiz.");
 			return;
 		}
 
@@ -311,7 +311,7 @@ export default class VaultRecallPlugin extends Plugin {
 			const confirmed = await confirmModal(
 				this.app,
 				"AI quiz privacy",
-				"VaultRecall stores your API key in plaintext plugin data and sends note excerpts, your quiz prompt, model name, and API key directly to your configured AI endpoint. Continue only with a restricted key and notes you are allowed to send.",
+				"StudyStream SR stores your API key in plaintext plugin data and sends note excerpts, your quiz prompt, model name, and API key directly to your configured AI endpoint. Continue only with a restricted key and notes you are allowed to send.",
 				"I understand"
 			);
 			if (!confirmed) return;
@@ -324,7 +324,7 @@ export default class VaultRecallPlugin extends Plugin {
 			endpointOrigin = validateQuizEndpoint(this.settings.apiBaseUrl).origin;
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : "The configured API URL is invalid.";
-			new Notice(`VaultRecall: ${msg}`);
+			new Notice(`StudyStream SR: ${msg}`);
 			return;
 		}
 
@@ -332,7 +332,7 @@ export default class VaultRecallPlugin extends Plugin {
 			const confirmed = await confirmModal(
 				this.app,
 				"Trust AI endpoint",
-				`VaultRecall will send note excerpts and your API key to ${endpointOrigin}. Continue only if you trust this endpoint.`,
+				`StudyStream SR will send note excerpts and your API key to ${endpointOrigin}. Continue only if you trust this endpoint.`,
 				"Trust endpoint"
 			);
 			if (!confirmed) return;
@@ -349,7 +349,7 @@ export default class VaultRecallPlugin extends Plugin {
 		);
 		const total = queues.due.length + queues.new.length;
 		if (total === 0) {
-			new Notice("VaultRecall: no due or new cards in this folder.");
+			new Notice("StudyStream SR: no due or new cards in this folder.");
 			return;
 		}
 
@@ -371,7 +371,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.session.openCurrent();
 		this.openQuizForCurrent();
 		new Notice(
-			`VaultRecall: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
+			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
 		);
 	}
 
@@ -403,13 +403,13 @@ export default class VaultRecallPlugin extends Plugin {
 
 			if (result.isLeech) {
 				new Notice(
-					`VaultRecall: "${result.file.basename}" has failed ${result.lapses} times. Consider rewriting this note.`,
+					`StudyStream SR: "${result.file.basename}" has failed ${result.lapses} times. Consider rewriting this note.`,
 					8000
 				);
 			}
 
 			if (this.session.isDone) {
-				new Notice("VaultRecall: session complete!");
+				new Notice("StudyStream SR: session complete!");
 				this.finishSession();
 				return;
 			}
@@ -421,7 +421,7 @@ export default class VaultRecallPlugin extends Plugin {
 				this.openQuizForCurrent();
 			}
 		} catch {
-			new Notice("VaultRecall: rating failed. Review data may not have been saved.");
+			new Notice("StudyStream SR: rating failed. Review data may not have been saved.");
 		} finally {
 			this.isRating = false;
 		}
@@ -537,7 +537,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-			`VaultRecall: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`
+			`StudyStream SR: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`
 		);
 	}
 
@@ -554,7 +554,7 @@ export default class VaultRecallPlugin extends Plugin {
 		});
 
 		if (files.length === 0) {
-			new Notice("VaultRecall: no legacy frontmatter review data found.");
+			new Notice("StudyStream SR: no legacy frontmatter review data found.");
 			return;
 		}
 
@@ -584,21 +584,21 @@ export default class VaultRecallPlugin extends Plugin {
 		}
 
 		new Notice(
-			`VaultRecall: removed legacy frontmatter review data from ${stripped} note${stripped === 1 ? "" : "s"}. Failed: ${failed}.`
+			`StudyStream SR: removed legacy frontmatter review data from ${stripped} note${stripped === 1 ? "" : "s"}. Failed: ${failed}.`
 		);
 	}
 
 	private showOrphanedRecords(): void {
 		const orphaned = this.getOrphanedRecordPaths();
 		if (orphaned.length === 0) {
-			new Notice("VaultRecall: no orphaned review records found.");
+			new Notice("StudyStream SR: no orphaned review records found.");
 			return;
 		}
 
 		const preview = orphaned.slice(0, 5).join("\n");
 		const extra = orphaned.length > 5 ? `\n...and ${orphaned.length - 5} more.` : "";
 		new Notice(
-			`VaultRecall: ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"} found.\n${preview}${extra}`,
+			`StudyStream SR: ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"} found.\n${preview}${extra}`,
 			10000
 		);
 	}
@@ -606,7 +606,7 @@ export default class VaultRecallPlugin extends Plugin {
 	private async pruneOrphanedRecords(): Promise<void> {
 		const orphaned = this.getOrphanedRecordPaths();
 		if (orphaned.length === 0) {
-			new Notice("VaultRecall: no orphaned review records to prune.");
+			new Notice("StudyStream SR: no orphaned review records to prune.");
 			return;
 		}
 
@@ -625,7 +625,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-			`VaultRecall: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`
+			`StudyStream SR: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`
 		);
 	}
 
@@ -676,7 +676,7 @@ export default class VaultRecallPlugin extends Plugin {
 		};
 
 		await navigator.clipboard.writeText(JSON.stringify(diagnostics, null, 2));
-		new Notice("VaultRecall: diagnostics copied to clipboard.");
+		new Notice("StudyStream SR: diagnostics copied to clipboard.");
 	}
 
 	private getOrphanedRecordPaths(): string[] {

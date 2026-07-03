@@ -1,0 +1,10 @@
+{
+	"id": "vaultrecall",
+	"name": "VaultRecall",
+	"version": "0.1.0",
+	"minAppVersion": "0.15.0",
+	"description": "Beta spaced repetition for your vault with SM-2 scheduling and AI-generated quizzes.",
+	"authorUrl": "https://github.com/chrisnmorrison",
+	"author": "VaultRecall",
+	"isDesktopOnly": true
+}

@@ -7,6 +7,7 @@ All notable changes to this project will be documented here.
 Beta release. Errors may occur; please report issues at https://github.com/chrisnmorrison/vaultrecall/issues for StudyStream SR.
 
 ### Added
+
 - Navigate Mode: sequential note review with SM-2 spaced repetition scheduling
 - AI Quiz Mode: on-demand question generation via any OpenAI-compatible API (BYOK)
 - Floating review HUD with Again / Hard / Good / Easy rating buttons

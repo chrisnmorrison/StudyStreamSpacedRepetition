@@ -9,10 +9,12 @@ Beta spaced repetition built into Obsidian desktop. Review your notes on a sched
 The plugin isn't on the community list yet. Install via BRAT or manually.
 
 **BRAT**
+
 1. Install the [BRAT plugin](https://github.com/TfTHacker/obsidian42-brat)
 2. In BRAT settings, add this repository's URL
 
 **Manual**
+
 1. Download `main.js`, `styles.css`, and `manifest.json` from the latest release
 2. Create `.obsidian/plugins/vaultrecall/` in your vault
 3. Drop the three files in, reload Obsidian, and enable the plugin
@@ -29,13 +31,13 @@ Notes open one at a time in reading mode (so keyboard shortcuts don't accidental
 
 Rate each note after reading it:
 
-| Key | Rating |
-|-----|--------|
+| Key | Rating                                    |
+| --- | ----------------------------------------- |
 | 1   | Again - forgotten, reschedule to tomorrow |
-| 2   | Hard |
-| 3   | Good |
-| 4   | Easy |
-| u   | Undo last rating |
+| 2   | Hard                                      |
+| 3   | Good                                      |
+| 4   | Easy                                      |
+| u   | Undo last rating                          |
 
 Notes without an internal review record are treated as new. Each session includes due cards up to your daily due review limit plus up to your configured new-card limit.
 
@@ -51,17 +53,17 @@ The status bar shows how many notes are due and new in your default folder. Run 
 
 ## Settings
 
-| Setting | Description |
-|---------|-------------|
-| Default folder | Folder used by the ribbon icon and status bar |
-| Review order | Due-date first or random |
-| Daily due review limit | Max due cards per session (0 = no limit) |
-| New cards per session | Max unseen notes introduced per session |
-| Leech threshold | Notes that fail this many times trigger a warning (0 = off) |
-| API key | Your OpenAI-compatible key |
-| API base URL | Chat completions endpoint |
-| Model | Model name sent to the API |
-| Custom quiz prompt | Replaces the default quiz instructions |
+| Setting                | Description                                                 |
+| ---------------------- | ----------------------------------------------------------- |
+| Default folder         | Folder used by the ribbon icon and status bar               |
+| Review order           | Due-date first or random                                    |
+| Daily due review limit | Max due cards per session (0 = no limit)                    |
+| New cards per session  | Max unseen notes introduced per session                     |
+| Leech threshold        | Notes that fail this many times trigger a warning (0 = off) |
+| API key                | Your OpenAI-compatible key                                  |
+| API base URL           | Chat completions endpoint                                   |
+| Model                  | Model name sent to the API                                  |
+| Custom quiz prompt     | Replaces the default quiz instructions                      |
 
 StudyStream SR v1 is desktop-only. Mobile support needs separate QA for the review HUD, modals, and provider networking before it should be enabled.
 

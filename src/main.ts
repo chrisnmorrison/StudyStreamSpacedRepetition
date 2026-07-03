@@ -40,22 +40,26 @@ export default class VaultRecallPlugin extends Plugin {
 
 		this.statusBarItem = this.addStatusBarItem();
 		this.registerEvent(
-			this.app.metadataCache.on("changed", () => this.scheduleStatusBarUpdate())
+			this.app.metadataCache.on("changed", () =>
+				this.scheduleStatusBarUpdate(),
+			),
 		);
-		this.registerEvent(this.app.vault.on("create", () => this.scheduleStatusBarUpdate()));
+		this.registerEvent(
+			this.app.vault.on("create", () => this.scheduleStatusBarUpdate()),
+		);
 		this.registerEvent(
 			this.app.vault.on("rename", (file, oldPath) => {
 				const remapped = remapRecordPaths(
 					this.settings.records,
 					oldPath,
 					file.path,
-					file instanceof TFolder
+					file instanceof TFolder,
 				);
 				if (remapped > 0) {
 					void this.saveSettings();
 				}
 				this.updateStatusBar();
-			})
+			}),
 		);
 		this.registerEvent(
 			this.app.vault.on("delete", () => {
@@ -63,13 +67,17 @@ export default class VaultRecallPlugin extends Plugin {
 				// providers can briefly report deletes, and automatic removal would
 				// turn a transient sync event into permanent review-history loss.
 				this.updateStatusBar();
-			})
+			}),
 		);
 		this.updateStatusBar();
 
-		this.addRibbonIcon("graduation-cap", "StudyStream SR: start review session", () => {
-			this.startDefaultFolderSession();
-		});
+		this.addRibbonIcon(
+			"graduation-cap",
+			"StudyStream SR: start review session",
+			() => {
+				this.startDefaultFolderSession();
+			},
+		);
 
 		this.registerEvent(
 			this.app.workspace.on("file-menu", (menu, file: TAbstractFile) => {
@@ -79,16 +87,16 @@ export default class VaultRecallPlugin extends Plugin {
 					item
 						.setTitle("Start review session")
 						.setIcon("book-open")
-						.onClick(() => this.startNavigateSession(file))
+						.onClick(() => this.startNavigateSession(file)),
 				);
 
 				menu.addItem((item) =>
 					item
 						.setTitle("Start AI quiz session")
 						.setIcon("brain")
-						.onClick(() => this.startQuizSession(file))
+						.onClick(() => this.startQuizSession(file)),
 				);
-			})
+			}),
 		);
 
 		this.addCommand({
@@ -180,13 +188,19 @@ export default class VaultRecallPlugin extends Plugin {
 
 	async loadSettings(): Promise<void> {
 		this.settings = normalizeSettings(
-			Object.assign({}, DEFAULT_SETTINGS, (await this.loadData()) as Partial<VaultRecallSettings>)
+			Object.assign(
+				{},
+				DEFAULT_SETTINGS,
+				(await this.loadData()) as Partial<VaultRecallSettings>,
+			),
 		);
 	}
 
 	async saveSettings(): Promise<void> {
 		this.settings = normalizeSettings(this.settings);
-		const snapshot = JSON.parse(JSON.stringify(this.settings)) as VaultRecallSettings;
+		const snapshot = JSON.parse(
+			JSON.stringify(this.settings),
+		) as VaultRecallSettings;
 		const save = this.saveQueue.then(() => this.saveData(snapshot));
 		this.saveQueue = save.catch(() => undefined);
 		await save;
@@ -209,13 +223,18 @@ export default class VaultRecallPlugin extends Plugin {
 			this.statusBarItem.setText("");
 			return;
 		}
-		const queues = collectStudyQueues(this.app, folder, this.settings.records, {
-			maxFiles: STATUS_SCAN_LIMIT,
-		});
+		const queues = collectStudyQueues(
+			this.app,
+			folder,
+			this.settings.records,
+			{
+				maxFiles: STATUS_SCAN_LIMIT,
+			},
+		);
 		if (queues.due.length > 0 || queues.new.length > 0) {
 			const suffix = queues.truncated ? " (partial)" : "";
 			this.statusBarItem.setText(
-				`SR: ${queues.due.length} due, ${queues.new.length} new${suffix}`
+				`SR: ${queues.due.length} due, ${queues.new.length} new${suffix}`,
 			);
 		} else {
 			this.statusBarItem.setText("SR: all caught up");
@@ -232,13 +251,15 @@ export default class VaultRecallPlugin extends Plugin {
 	private showStats(): void {
 		const today = localDateString();
 		const reviewedToday =
-			this.settings.stats.lastDate === today ? this.settings.stats.reviewedToday : 0;
+			this.settings.stats.lastDate === today
+				? this.settings.stats.reviewedToday
+				: 0;
 		const folder = this.getDefaultFolder();
 		const queues = folder
 			? collectStudyQueues(this.app, folder, this.settings.records)
 			: { due: [], new: [] };
 		new Notice(
-			`StudyStream SR\nReviewed today: ${reviewedToday}\nDue in default folder: ${queues.due.length}\nNew in default folder: ${queues.new.length}`
+			`StudyStream SR\nReviewed today: ${reviewedToday}\nDue in default folder: ${queues.due.length}\nNew in default folder: ${queues.new.length}`,
 		);
 	}
 
@@ -255,7 +276,9 @@ export default class VaultRecallPlugin extends Plugin {
 	private startDefaultFolderSession(): void {
 		const path = this.settings.defaultFolder;
 		if (!path) {
-			new Notice("StudyStream SR: set a default folder in settings first.");
+			new Notice(
+				"StudyStream SR: set a default folder in settings first.",
+			);
 			return;
 		}
 		const abstract = this.app.vault.getAbstractFileByPath(path);
@@ -272,7 +295,7 @@ export default class VaultRecallPlugin extends Plugin {
 		this.quizMode = false;
 
 		const queues = this.applySessionSettings(
-			collectStudyQueues(this.app, folder, this.settings.records)
+			collectStudyQueues(this.app, folder, this.settings.records),
 		);
 		const total = queues.due.length + queues.new.length;
 		if (total === 0) {
@@ -285,25 +308,27 @@ export default class VaultRecallPlugin extends Plugin {
 			queues,
 			this.settings.records,
 			() => this.saveSettings(),
-			this.settings.leechThreshold
+			this.settings.leechThreshold,
 		);
 		this.hud = new ReviewHud(
 			this.session,
 			(q) => void this.rate(q),
 			() => void this.finishWithConfirm(),
 			() => this.editCurrentNote(),
-			() => void this.undo()
+			() => void this.undo(),
 		);
 
 		await this.session.openCurrent();
 		new Notice(
-			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
+			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`,
 		);
 	}
 
 	async startQuizSession(folder: TFolder): Promise<void> {
 		if (!this.settings.apiKey) {
-			new Notice("StudyStream SR: add an API key in settings to use AI Quiz.");
+			new Notice(
+				"StudyStream SR: add an API key in settings to use AI Quiz.",
+			);
 			return;
 		}
 
@@ -312,7 +337,7 @@ export default class VaultRecallPlugin extends Plugin {
 				this.app,
 				"AI quiz privacy",
 				"StudyStream SR stores your API key in plaintext plugin data and sends note excerpts, your quiz prompt, model name, and API key directly to your configured AI endpoint. Continue only with a restricted key and notes you are allowed to send.",
-				"I understand"
+				"I understand",
 			);
 			if (!confirmed) return;
 			this.settings.aiPrivacyAccepted = true;
@@ -321,9 +346,14 @@ export default class VaultRecallPlugin extends Plugin {
 
 		let endpointOrigin: string;
 		try {
-			endpointOrigin = validateQuizEndpoint(this.settings.apiBaseUrl).origin;
+			endpointOrigin = validateQuizEndpoint(
+				this.settings.apiBaseUrl,
+			).origin;
 		} catch (err) {
-			const msg = err instanceof Error ? err.message : "The configured API URL is invalid.";
+			const msg =
+				err instanceof Error
+					? err.message
+					: "The configured API URL is invalid.";
 			new Notice(`StudyStream SR: ${msg}`);
 			return;
 		}
@@ -333,7 +363,7 @@ export default class VaultRecallPlugin extends Plugin {
 				this.app,
 				"Trust AI endpoint",
 				`StudyStream SR will send note excerpts and your API key to ${endpointOrigin}. Continue only if you trust this endpoint.`,
-				"Trust endpoint"
+				"Trust endpoint",
 			);
 			if (!confirmed) return;
 			this.settings.aiTrustedOrigin = endpointOrigin;
@@ -345,7 +375,7 @@ export default class VaultRecallPlugin extends Plugin {
 		this.quizMode = true;
 
 		const queues = this.applySessionSettings(
-			collectStudyQueues(this.app, folder, this.settings.records)
+			collectStudyQueues(this.app, folder, this.settings.records),
 		);
 		const total = queues.due.length + queues.new.length;
 		if (total === 0) {
@@ -358,20 +388,20 @@ export default class VaultRecallPlugin extends Plugin {
 			queues,
 			this.settings.records,
 			() => this.saveSettings(),
-			this.settings.leechThreshold
+			this.settings.leechThreshold,
 		);
 		this.hud = new ReviewHud(
 			this.session,
 			(q) => void this.rate(q),
 			() => void this.finishWithConfirm(),
 			() => this.editCurrentNote(),
-			() => void this.undo()
+			() => void this.undo(),
 		);
 
 		await this.session.openCurrent();
 		this.openQuizForCurrent();
 		new Notice(
-			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`
+			`StudyStream SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`,
 		);
 	}
 
@@ -380,11 +410,18 @@ export default class VaultRecallPlugin extends Plugin {
 		if (file) {
 			this.closeActiveQuizModal();
 			const token = String(this.sessionToken);
-			const modal = new QuizModal(this.app, file, this.settings, (q, path) => {
-				if (!this.session || String(this.sessionToken) !== token) return;
-				if (this.session.currentFile?.path !== path) return;
-				void this.rate(q);
-			}, token);
+			const modal = new QuizModal(
+				this.app,
+				file,
+				this.settings,
+				(q, path) => {
+					if (!this.session || String(this.sessionToken) !== token)
+						return;
+					if (this.session.currentFile?.path !== path) return;
+					void this.rate(q);
+				},
+				token,
+			);
 			this.activeQuizModal = modal;
 			modal.open();
 		}
@@ -404,7 +441,7 @@ export default class VaultRecallPlugin extends Plugin {
 			if (result.isLeech) {
 				new Notice(
 					`StudyStream SR: "${result.file.basename}" has failed ${result.lapses} times. Consider rewriting this note.`,
-					8000
+					8000,
 				);
 			}
 
@@ -421,7 +458,9 @@ export default class VaultRecallPlugin extends Plugin {
 				this.openQuizForCurrent();
 			}
 		} catch {
-			new Notice("StudyStream SR: rating failed. Review data may not have been saved.");
+			new Notice(
+				"StudyStream SR: rating failed. Review data may not have been saved.",
+			);
 		} finally {
 			this.isRating = false;
 		}
@@ -451,7 +490,7 @@ export default class VaultRecallPlugin extends Plugin {
 				this.app,
 				"End review session",
 				"End the current review session?",
-				"End session"
+				"End session",
 			)
 		) {
 			this.finishSession();
@@ -537,7 +576,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-			`StudyStream SR: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`
+			`StudyStream SR: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`,
 		);
 	}
 
@@ -546,15 +585,17 @@ export default class VaultRecallPlugin extends Plugin {
 			const fm = this.getFrontmatter(file);
 			return Boolean(
 				fm &&
-					("sr-due" in fm ||
-						"sr-interval" in fm ||
-						"sr-ease" in fm ||
-						"sr-lapses" in fm)
+				("sr-due" in fm ||
+					"sr-interval" in fm ||
+					"sr-ease" in fm ||
+					"sr-lapses" in fm),
 			);
 		});
 
 		if (files.length === 0) {
-			new Notice("StudyStream SR: no legacy frontmatter review data found.");
+			new Notice(
+				"StudyStream SR: no legacy frontmatter review data found.",
+			);
 			return;
 		}
 
@@ -562,7 +603,7 @@ export default class VaultRecallPlugin extends Plugin {
 			this.app,
 			"Remove legacy data",
 			`Remove legacy SR frontmatter from ${files.length} note${files.length === 1 ? "" : "s"}? This only removes sr-due, sr-interval, sr-ease, and sr-lapses. It does not change internal review records.`,
-			"Remove fields"
+			"Remove fields",
 		);
 		if (!confirmed) return;
 
@@ -584,7 +625,7 @@ export default class VaultRecallPlugin extends Plugin {
 		}
 
 		new Notice(
-			`StudyStream SR: removed legacy frontmatter review data from ${stripped} note${stripped === 1 ? "" : "s"}. Failed: ${failed}.`
+			`StudyStream SR: removed legacy frontmatter review data from ${stripped} note${stripped === 1 ? "" : "s"}. Failed: ${failed}.`,
 		);
 	}
 
@@ -596,10 +637,11 @@ export default class VaultRecallPlugin extends Plugin {
 		}
 
 		const preview = orphaned.slice(0, 5).join("\n");
-		const extra = orphaned.length > 5 ? `\n...and ${orphaned.length - 5} more.` : "";
+		const extra =
+			orphaned.length > 5 ? `\n...and ${orphaned.length - 5} more.` : "";
 		new Notice(
 			`StudyStream SR: ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"} found.\n${preview}${extra}`,
-			10000
+			10000,
 		);
 	}
 
@@ -614,7 +656,7 @@ export default class VaultRecallPlugin extends Plugin {
 			this.app,
 			"Prune orphaned records",
 			`Delete ${orphaned.length} review record${orphaned.length === 1 ? "" : "s"} whose note files no longer exist?`,
-			"Prune records"
+			"Prune records",
 		);
 		if (!confirmed) return;
 
@@ -625,7 +667,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-			`StudyStream SR: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`
+			`StudyStream SR: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`,
 		);
 	}
 
@@ -636,14 +678,20 @@ export default class VaultRecallPlugin extends Plugin {
 					maxFiles: STATUS_SCAN_LIMIT,
 				})
 			: { due: [], new: [], scanned: 0, truncated: false };
-		const appWithVersion = this.app as unknown as { getVersion?: () => string; version?: string };
+		const appWithVersion = this.app as unknown as {
+			getVersion?: () => string;
+			version?: string;
+		};
 		const diagnostics = {
 			plugin: {
 				id: this.manifest.id,
 				version: this.manifest.version,
 			},
 			obsidian: {
-				version: appWithVersion.getVersion?.() ?? appWithVersion.version ?? "unknown",
+				version:
+					appWithVersion.getVersion?.() ??
+					appWithVersion.version ??
+					"unknown",
 				platform: {
 					isDesktop: Platform.isDesktop,
 					isMobile: Platform.isMobile,
@@ -675,7 +723,9 @@ export default class VaultRecallPlugin extends Plugin {
 			},
 		};
 
-		await navigator.clipboard.writeText(JSON.stringify(diagnostics, null, 2));
+		await navigator.clipboard.writeText(
+			JSON.stringify(diagnostics, null, 2),
+		);
 		new Notice("StudyStream SR: diagnostics copied to clipboard.");
 	}
 
@@ -701,7 +751,10 @@ export default class VaultRecallPlugin extends Plugin {
 		if (!view) return;
 		const state = view.leaf.getViewState();
 		if (state.type === "markdown") {
-			void view.leaf.setViewState({ ...state, state: { ...state.state, mode: "source" } });
+			void view.leaf.setViewState({
+				...state,
+				state: { ...state.state, mode: "source" },
+			});
 		}
 	}
 

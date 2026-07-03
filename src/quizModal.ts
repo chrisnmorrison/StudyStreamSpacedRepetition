@@ -18,7 +18,7 @@ export class QuizModal extends Modal {
 		private file: TFile,
 		private settings: VaultRecallSettings,
 		private onRate?: (quality: number, filePath: string) => void,
-		private requestToken = ""
+		private requestToken = "",
 	) {
 		super(app);
 	}
@@ -38,14 +38,16 @@ export class QuizModal extends Modal {
 		try {
 			if (this.file.stat.size > MAX_NOTE_BYTES) {
 				throw new Error(
-					`Note is too large for AI quiz generation (${Math.ceil(this.file.stat.size / 1024)} KB).`
+					`Note is too large for AI quiz generation (${Math.ceil(this.file.stat.size / 1024)} KB).`,
 				);
 			}
 			const raw = await this.app.vault.read(this.file);
 			if (this.closed || requestId !== this.requestId) return;
 
 			const content = raw.slice(0, MAX_CHARS);
-			const markdown = sanitizeQuizMarkdown(await this.fetchQuiz(content));
+			const markdown = sanitizeQuizMarkdown(
+				await this.fetchQuiz(content),
+			);
 			if (this.closed || requestId !== this.requestId) return;
 
 			statusEl.remove();
@@ -53,12 +55,16 @@ export class QuizModal extends Modal {
 			this.renderQuizText(resultEl, markdown);
 
 			if (this.onRate) {
-				const ratingSection = contentEl.createDiv({ cls: "sr-quiz-rating" });
+				const ratingSection = contentEl.createDiv({
+					cls: "sr-quiz-rating",
+				});
 				ratingSection.createEl("p", {
 					text: "Rate this note:",
 					cls: "sr-quiz-rating-label",
 				});
-				const btnRow = ratingSection.createDiv({ cls: "sr-quiz-rating-buttons" });
+				const btnRow = ratingSection.createDiv({
+					cls: "sr-quiz-rating-buttons",
+				});
 				RATING_BUTTONS.forEach(([label, quality, cls]) => {
 					const btn = btnRow.createEl("button", { cls, text: label });
 					btn.addEventListener("click", () => {
@@ -104,8 +110,8 @@ export class QuizModal extends Modal {
 		const timeoutPromise = new Promise<never>((_, reject) =>
 			setTimeout(
 				() => reject(new Error("Request timed out after 30 seconds")),
-				TIMEOUT_MS
-			)
+				TIMEOUT_MS,
+			),
 		);
 
 		const fetchPromise = requestUrl({
@@ -120,7 +126,8 @@ export class QuizModal extends Modal {
 				messages: [
 					{
 						role: "system",
-						content: "You are a study assistant. Output only Markdown.",
+						content:
+							"You are a study assistant. Output only Markdown.",
 					},
 					{
 						role: "user",

@@ -30,7 +30,7 @@ export class ReviewSession {
 		files: ReviewSessionQueues,
 		private records: Record<string, SRRecord>,
 		private saveRecords: () => Promise<void>,
-		private leechThreshold: number = 0
+		private leechThreshold: number = 0,
 	) {
 		this.dueQueue = [...files.due];
 		this.newQueue = [...files.new];
@@ -72,7 +72,10 @@ export class ReviewSession {
 		await leaf.openFile(file);
 		const state = leaf.getViewState();
 		if (state.type === "markdown") {
-			await leaf.setViewState({ ...state, state: { ...state.state, mode: "preview" } });
+			await leaf.setViewState({
+				...state,
+				state: { ...state.state, mode: "preview" },
+			});
 		}
 	}
 
@@ -97,7 +100,9 @@ export class ReviewSession {
 			}
 			await this.saveRecords();
 		} catch {
-			new Notice("StudyStream SR: could not undo - failed to restore review data.");
+			new Notice(
+				"StudyStream SR: could not undo - failed to restore review data.",
+			);
 			return false;
 		}
 
@@ -108,7 +113,7 @@ export class ReviewSession {
 
 	private async updateMetadata(
 		file: TFile,
-		quality: number
+		quality: number,
 	): Promise<Omit<RateResult, "file">> {
 		const previous = this.records[file.path];
 		const prevInterval = previous?.interval ?? 0;
@@ -140,12 +145,15 @@ export class ReviewSession {
 				delete this.records[file.path];
 			}
 			this.undoState = null;
-			new Notice(`StudyStream SR: failed to update review data for "${file.basename}".`);
+			new Notice(
+				`StudyStream SR: failed to update review data for "${file.basename}".`,
+			);
 			throw new Error("Failed to save review data.");
 		}
 
 		return {
-			isLeech: this.leechThreshold > 0 && newLapses >= this.leechThreshold,
+			isLeech:
+				this.leechThreshold > 0 && newLapses >= this.leechThreshold,
 			lapses: newLapses,
 		};
 	}

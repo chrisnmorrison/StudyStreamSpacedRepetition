@@ -1,8 +1,8 @@
 # StudyStream SR
 
-Beta spaced repetition built into Obsidian desktop. Review your notes on a schedule using SM-2 and optionally generate AI quizzes from note content. Notes stay untouched: scheduling data lives in the plugin's internal `.obsidian/plugins/vaultrecall/data.json`.
+Beta spaced repetition built into Obsidian desktop. Review your notes on a schedule using SM-2 and optionally generate AI quizzes from note content. Notes stay untouched: scheduling data lives in the plugin's internal `.obsidian/plugins/studystream/data.json`.
 
-**Beta notice:** StudyStream SR `0.1.0` is a beta release. Errors may occur, especially with large vaults, sync conflicts, unusual Markdown, or AI provider responses. Back up your vault before relying on it for important review history. Please report bugs on [GitHub Issues](https://github.com/chrisnmorrison/vaultrecall/issues), ideally with diagnostics from **StudyStream SR: Copy diagnostics**.
+**Beta notice:** StudyStream SR `0.1.0` is a beta release. Errors may occur, especially with large vaults, sync conflicts, unusual Markdown, or AI provider responses. Back up your vault before relying on it for important review history. Please report bugs on [GitHub Issues](https://github.com/chrisnmorrison/studystream/issues), ideally with diagnostics from **StudyStream SR: Copy diagnostics**.
 
 ## Installation
 
@@ -16,7 +16,7 @@ The plugin isn't on the community list yet. Install via BRAT or manually.
 **Manual**
 
 1. Download `main.js`, `styles.css`, and `manifest.json` from the latest release
-2. Create `.obsidian/plugins/vaultrecall/` in your vault
+2. Create `.obsidian/plugins/studystream/` in your vault
 3. Drop the three files in, reload Obsidian, and enable the plugin
 
 ## Usage
@@ -69,7 +69,7 @@ StudyStream SR v1 is desktop-only. Mobile support needs separate QA for the revi
 
 ## Review data and backups
 
-Review history is stored in `.obsidian/plugins/vaultrecall/data.json`, keyed by each note's vault-relative path. Include that file in vault syncs and backups if you want scheduling history preserved.
+Review history is stored in `.obsidian/plugins/studystream/data.json`, keyed by each note's vault-relative path. Include that file in vault syncs and backups if you want scheduling history preserved.
 
 This also means review history does not travel with a single Markdown note. If you copy one note to another vault, its content moves but its spaced repetition state does not.
 
@@ -83,7 +83,7 @@ Renaming files or folders while the plugin is enabled updates internal review re
 
 ## API key security
 
-Keys are stored in plaintext at `.obsidian/plugins/vaultrecall/data.json`. This is how Obsidian plugin storage works - there's no encrypted keychain. A few things to keep in mind:
+Keys are stored in plaintext at `.obsidian/plugins/studystream/data.json`. This is how Obsidian plugin storage works - there's no encrypted keychain. A few things to keep in mind:
 
 - Set a spending cap on the key you use here
 - If your vault syncs to a shared location or cloud storage, be aware that `data.json` goes with it
@@ -97,7 +97,7 @@ Run **StudyStream SR: Copy diagnostics** when reporting an issue. It copies plug
 
 ## Contributing
 
-Bug reports and pull requests are welcome. Please report beta issues at [github.com/chrisnmorrison/vaultrecall/issues](https://github.com/chrisnmorrison/vaultrecall/issues). The source is plain TypeScript with no runtime dependencies beyond the Obsidian API.
+Bug reports and pull requests are welcome. Please report beta issues at [github.com/chrisnmorrison/studystream/issues](https://github.com/chrisnmorrison/studystream/issues). The source is plain TypeScript with no runtime dependencies beyond the Obsidian API.
 
 ```bash
 npm install

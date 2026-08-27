@@ -1,5 +1,5 @@
 import { App, Modal, Notice, TFile, requestUrl } from "obsidian";
-import { VaultRecallSettings } from "./settings";
+import { StudyStreamSettings } from "./settings";
 import { RATING_BUTTONS } from "./constants";
 import { sanitizeQuizMarkdown } from "./quizSafety";
 
@@ -16,7 +16,7 @@ export class QuizModal extends Modal {
 	constructor(
 		app: App,
 		private file: TFile,
-		private settings: VaultRecallSettings,
+		private settings: StudyStreamSettings,
 		private onRate?: (quality: number, filePath: string) => void,
 		private requestToken = "",
 	) {

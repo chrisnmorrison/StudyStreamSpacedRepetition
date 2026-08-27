@@ -8,8 +8,8 @@ import {
 	TFile,
 	TFolder,
 } from "obsidian";
-import { DEFAULT_SETTINGS, VaultRecallSettings } from "./settings";
-import { VaultRecallSettingTab } from "./settingsTab";
+import { DEFAULT_SETTINGS, StudyStreamSettings } from "./settings";
+import { StudyStreamSettingTab } from "./settingsTab";
 import { collectStudyQueues, StudyQueues } from "./scanner";
 import { ReviewSession } from "./session";
 import { ReviewHud } from "./reviewHud";
@@ -22,8 +22,8 @@ import { remapRecordPaths } from "./records";
 
 const STATUS_SCAN_LIMIT = 5000;
 
-export default class VaultRecallPlugin extends Plugin {
-	settings: VaultRecallSettings;
+export default class StudyStreamPlugin extends Plugin {
+	settings: StudyStreamSettings;
 	private session: ReviewSession | null = null;
 	private hud: ReviewHud | null = null;
 	private quizMode = false;
@@ -36,7 +36,7 @@ export default class VaultRecallPlugin extends Plugin {
 
 	async onload(): Promise<void> {
 		await this.loadSettings();
-		this.addSettingTab(new VaultRecallSettingTab(this.app, this));
+		this.addSettingTab(new StudyStreamSettingTab(this.app, this));
 
 		this.statusBarItem = this.addStatusBarItem();
 		this.registerEvent(
@@ -191,7 +191,7 @@ export default class VaultRecallPlugin extends Plugin {
 			Object.assign(
 				{},
 				DEFAULT_SETTINGS,
-				(await this.loadData()) as Partial<VaultRecallSettings>,
+				(await this.loadData()) as Partial<StudyStreamSettings>,
 			),
 		);
 	}
@@ -200,7 +200,7 @@ export default class VaultRecallPlugin extends Plugin {
 		this.settings = normalizeSettings(this.settings);
 		const snapshot = JSON.parse(
 			JSON.stringify(this.settings),
-		) as VaultRecallSettings;
+		) as StudyStreamSettings;
 		const save = this.saveQueue.then(() => this.saveData(snapshot));
 		this.saveQueue = save.catch(() => undefined);
 		await save;

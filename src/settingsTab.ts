@@ -1,10 +1,10 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import VaultRecallPlugin from "./main";
+import StudyStreamPlugin from "./main";
 
-export class VaultRecallSettingTab extends PluginSettingTab {
-	plugin: VaultRecallPlugin;
+export class StudyStreamSettingTab extends PluginSettingTab {
+	plugin: StudyStreamPlugin;
 
-	constructor(app: App, plugin: VaultRecallPlugin) {
+	constructor(app: App, plugin: StudyStreamPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}

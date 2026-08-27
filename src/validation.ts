@@ -1,4 +1,4 @@
-import { DEFAULT_SETTINGS, SRRecord, VaultRecallSettings } from "./settings";
+import { DEFAULT_SETTINGS, SRRecord, StudyStreamSettings } from "./settings";
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const ISO_DATE_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/;
@@ -48,8 +48,8 @@ export function normalizeRecord(value: unknown): SRRecord | null {
 	return normalized;
 }
 
-export function normalizeSettings(value: unknown): VaultRecallSettings {
-	const raw = value && typeof value === "object" ? (value as Partial<VaultRecallSettings>) : {};
+export function normalizeSettings(value: unknown): StudyStreamSettings {
+	const raw = value && typeof value === "object" ? (value as Partial<StudyStreamSettings>) : {};
 	const records: Record<string, SRRecord> = {};
 	const rawRecords =
 		raw.records && typeof raw.records === "object"

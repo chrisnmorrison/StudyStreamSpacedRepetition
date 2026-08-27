@@ -43,7 +43,7 @@ const context = await esbuild.context({
 
 if (prod) {
 	await context.rebuild();
-	const pluginId = "vaultrecall";
+	const pluginId = "studystream";
 	console.log(`
 Build complete. To install manually:
 

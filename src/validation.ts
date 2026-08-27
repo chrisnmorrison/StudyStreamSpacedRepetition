@@ -9,7 +9,12 @@ function stringValue(value: unknown, fallback: string): string {
 	return typeof value === "string" ? value : fallback;
 }
 
-function numberValue(value: unknown, fallback: number, min: number, max: number): number {
+function numberValue(
+	value: unknown,
+	fallback: number,
+	min: number,
+	max: number,
+): number {
 	const n = typeof value === "number" ? value : Number(value);
 	if (!Number.isFinite(n)) return fallback;
 	return Math.min(max, Math.max(min, Math.trunc(n)));
@@ -32,7 +37,8 @@ function booleanValue(value: unknown, fallback: boolean): boolean {
 export function normalizeRecord(value: unknown): SRRecord | null {
 	if (!value || typeof value !== "object") return null;
 	const record = value as Partial<SRRecord>;
-	if (typeof record.due !== "string" || !DATE_RE.test(record.due)) return null;
+	if (typeof record.due !== "string" || !DATE_RE.test(record.due))
+		return null;
 
 	const normalized: SRRecord = {
 		due: record.due,
@@ -41,7 +47,10 @@ export function normalizeRecord(value: unknown): SRRecord | null {
 		lapses: numberValue(record.lapses, 0, 0, MAX_LAPSES),
 	};
 
-	if (typeof record.updatedAt === "string" && ISO_DATE_RE.test(record.updatedAt)) {
+	if (
+		typeof record.updatedAt === "string" &&
+		ISO_DATE_RE.test(record.updatedAt)
+	) {
 		normalized.updatedAt = record.updatedAt;
 	}
 
@@ -49,7 +58,10 @@ export function normalizeRecord(value: unknown): SRRecord | null {
 }
 
 export function normalizeSettings(value: unknown): StudyStreamSettings {
-	const raw = value && typeof value === "object" ? (value as Partial<StudyStreamSettings>) : {};
+	const raw =
+		value && typeof value === "object"
+			? (value as Partial<StudyStreamSettings>)
+			: {};
 	const records: Record<string, SRRecord> = {};
 	const rawRecords =
 		raw.records && typeof raw.records === "object"
@@ -64,28 +76,53 @@ export function normalizeSettings(value: unknown): StudyStreamSettings {
 
 	return {
 		apiKey: stringValue(raw.apiKey, DEFAULT_SETTINGS.apiKey).trim(),
-		apiBaseUrl: stringValue(raw.apiBaseUrl, DEFAULT_SETTINGS.apiBaseUrl).trim(),
-		aiTrustedOrigin: stringValue(raw.aiTrustedOrigin, DEFAULT_SETTINGS.aiTrustedOrigin),
+		apiBaseUrl: stringValue(
+			raw.apiBaseUrl,
+			DEFAULT_SETTINGS.apiBaseUrl,
+		).trim(),
+		aiTrustedOrigin: stringValue(
+			raw.aiTrustedOrigin,
+			DEFAULT_SETTINGS.aiTrustedOrigin,
+		),
 		aiPrivacyAccepted: booleanValue(
 			raw.aiPrivacyAccepted,
-			DEFAULT_SETTINGS.aiPrivacyAccepted
+			DEFAULT_SETTINGS.aiPrivacyAccepted,
 		),
-		model: stringValue(raw.model, DEFAULT_SETTINGS.model).trim() || DEFAULT_SETTINGS.model,
-		customPrompt: stringValue(raw.customPrompt, DEFAULT_SETTINGS.customPrompt),
-		defaultFolder: stringValue(raw.defaultFolder, DEFAULT_SETTINGS.defaultFolder).trim(),
+		model:
+			stringValue(raw.model, DEFAULT_SETTINGS.model).trim() ||
+			DEFAULT_SETTINGS.model,
+		customPrompt: stringValue(
+			raw.customPrompt,
+			DEFAULT_SETTINGS.customPrompt,
+		),
+		defaultFolder: stringValue(
+			raw.defaultFolder,
+			DEFAULT_SETTINGS.defaultFolder,
+		).trim(),
 		reviewOrder: reviewOrderValue(raw.reviewOrder),
-		dailyLimit: numberValue(raw.dailyLimit, DEFAULT_SETTINGS.dailyLimit, 0, 10000),
+		dailyLimit: numberValue(
+			raw.dailyLimit,
+			DEFAULT_SETTINGS.dailyLimit,
+			0,
+			10000,
+		),
 		newCardsPerSession: numberValue(
 			raw.newCardsPerSession,
 			DEFAULT_SETTINGS.newCardsPerSession,
 			0,
-			10000
+			10000,
 		),
-		leechThreshold: numberValue(raw.leechThreshold, DEFAULT_SETTINGS.leechThreshold, 0, 10000),
+		leechThreshold: numberValue(
+			raw.leechThreshold,
+			DEFAULT_SETTINGS.leechThreshold,
+			0,
+			10000,
+		),
 		records,
 		stats: {
 			lastDate:
-				typeof raw.stats?.lastDate === "string" && DATE_RE.test(raw.stats.lastDate)
+				typeof raw.stats?.lastDate === "string" &&
+				DATE_RE.test(raw.stats.lastDate)
 					? raw.stats.lastDate
 					: "",
 			reviewedToday: numberValue(raw.stats?.reviewedToday, 0, 0, 1000000),

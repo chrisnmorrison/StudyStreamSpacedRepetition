@@ -1,7 +1,7 @@
 {
 	"id": "studystream",
 	"name": "StudyStream SR",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"minAppVersion": "1.1.0",
 	"description": "Beta spaced repetition for your vault with SM-2 scheduling and optional BYOK AI-generated quizzes.",
 	"authorUrl": "https://github.com/chrisnmorrison",

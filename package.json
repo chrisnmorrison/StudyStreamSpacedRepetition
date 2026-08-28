@@ -1,6 +1,6 @@
 {
 	"name": "study-stream-sr",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Beta spaced repetition for Obsidian with SM-2 scheduling and AI quizzes.",
 	"main": "main.js",
 	"type": "module",

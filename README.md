@@ -6,18 +6,7 @@ Beta spaced repetition built into Obsidian desktop. Review your notes on a sched
 
 ## Installation
 
-The plugin isn't on the community list yet. Install via BRAT or manually.
-
-**BRAT**
-
-1. Install the [BRAT plugin](https://github.com/TfTHacker/obsidian42-brat)
-2. In BRAT settings, add this repository's URL
-
-**Manual**
-
-1. Download `main.js`, `styles.css`, and `manifest.json` from the latest release
-2. Create `.obsidian/plugins/studystream/` in your vault
-3. Drop the three files in, reload Obsidian, and enable the plugin
+The plugin is now live in Community Plugins. You should find it by searching `studystream`
 
 ## Usage
 

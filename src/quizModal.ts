@@ -108,7 +108,7 @@ export class QuizModal extends Modal {
 		const prompt = this.settings.customPrompt.trim() || DEFAULT_PROMPT;
 
 		const timeoutPromise = new Promise<never>((_, reject) =>
-			setTimeout(
+			window.setTimeout(
 				() => reject(new Error("Request timed out after 30 seconds")),
 				TIMEOUT_MS,
 			),

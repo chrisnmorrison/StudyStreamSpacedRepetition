@@ -4,7 +4,7 @@ export function remapRecordPath(
 	path: string,
 	oldPath: string,
 	newPath: string,
-	isFolder: boolean
+	isFolder: boolean,
 ): string | null {
 	if (path === oldPath) return newPath;
 	if (!isFolder) return null;
@@ -18,7 +18,7 @@ export function remapRecordPaths(
 	records: Record<string, SRRecord>,
 	oldPath: string,
 	newPath: string,
-	isFolder: boolean
+	isFolder: boolean,
 ): number {
 	const changes: Array<[string, string, SRRecord]> = [];
 

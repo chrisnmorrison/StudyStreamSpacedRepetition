@@ -73,7 +73,7 @@ export default class VaultRecallPlugin extends Plugin {
 
 		this.addRibbonIcon(
 			"graduation-cap",
-				"VaultRecall SR: start review session",
+			"VaultRecall SR: start review session",
 			() => {
 				this.startDefaultFolderSession();
 			},
@@ -200,7 +200,7 @@ export default class VaultRecallPlugin extends Plugin {
 		this.settings = normalizeSettings(this.settings);
 		const snapshot = JSON.parse(
 			JSON.stringify(this.settings),
-			) as VaultRecallSettings;
+		) as VaultRecallSettings;
 		const save = this.saveQueue.then(() => this.saveData(snapshot));
 		this.saveQueue = save.catch(() => undefined);
 		await save;
@@ -327,7 +327,7 @@ export default class VaultRecallPlugin extends Plugin {
 	async startQuizSession(folder: TFolder): Promise<void> {
 		if (!this.settings.apiKey) {
 			new Notice(
-							"VaultRecall SR: add an API key in settings to use AI Quiz.",
+				"VaultRecall SR: add an API key in settings to use AI Quiz.",
 			);
 			return;
 		}
@@ -336,7 +336,7 @@ export default class VaultRecallPlugin extends Plugin {
 			const confirmed = await confirmModal(
 				this.app,
 				"AI quiz privacy",
-							"VaultRecall SR stores your API key in plaintext plugin data and sends note excerpts, your quiz prompt, model name, and API key directly to your configured AI endpoint. Continue only with a restricted key and notes you are allowed to send.",
+				"VaultRecall SR stores your API key in plaintext plugin data and sends note excerpts, your quiz prompt, model name, and API key directly to your configured AI endpoint. Continue only with a restricted key and notes you are allowed to send.",
 				"I understand",
 			);
 			if (!confirmed) return;
@@ -354,7 +354,7 @@ export default class VaultRecallPlugin extends Plugin {
 				err instanceof Error
 					? err.message
 					: "The configured API URL is invalid.";
-					new Notice(`VaultRecall SR: ${msg}`);
+			new Notice(`VaultRecall SR: ${msg}`);
 			return;
 		}
 
@@ -362,7 +362,7 @@ export default class VaultRecallPlugin extends Plugin {
 			const confirmed = await confirmModal(
 				this.app,
 				"Trust AI endpoint",
-							`VaultRecall SR will send note excerpts and your API key to ${endpointOrigin}. Continue only if you trust this endpoint.`,
+				`VaultRecall SR will send note excerpts and your API key to ${endpointOrigin}. Continue only if you trust this endpoint.`,
 				"Trust endpoint",
 			);
 			if (!confirmed) return;
@@ -379,7 +379,7 @@ export default class VaultRecallPlugin extends Plugin {
 		);
 		const total = queues.due.length + queues.new.length;
 		if (total === 0) {
-					new Notice("VaultRecall SR: no due or new cards in this folder.");
+			new Notice("VaultRecall SR: no due or new cards in this folder.");
 			return;
 		}
 
@@ -401,7 +401,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.session.openCurrent();
 		this.openQuizForCurrent();
 		new Notice(
-					`VaultRecall SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`,
+			`VaultRecall SR: ${total} card${total === 1 ? "" : "s"} loaded (${queues.due.length} due, ${queues.new.length} new).`,
 		);
 	}
 
@@ -440,13 +440,13 @@ export default class VaultRecallPlugin extends Plugin {
 
 			if (result.isLeech) {
 				new Notice(
-									`VaultRecall SR: "${result.file.basename}" has failed ${result.lapses} times. Consider rewriting this note.`,
+					`VaultRecall SR: "${result.file.basename}" has failed ${result.lapses} times. Consider rewriting this note.`,
 					8000,
 				);
 			}
 
 			if (this.session.isDone) {
-							new Notice("VaultRecall SR: session complete!");
+				new Notice("VaultRecall SR: session complete!");
 				this.finishSession();
 				return;
 			}
@@ -459,7 +459,7 @@ export default class VaultRecallPlugin extends Plugin {
 			}
 		} catch {
 			new Notice(
-							"VaultRecall SR: rating failed. Review data may not have been saved.",
+				"VaultRecall SR: rating failed. Review data may not have been saved.",
 			);
 		} finally {
 			this.isRating = false;
@@ -576,7 +576,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-					`VaultRecall SR: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`,
+			`VaultRecall SR: imported ${imported} review record${imported === 1 ? "" : "s"} from frontmatter. Skipped ${skippedExisting} existing and ${skippedMissingDue} without sr-due.`,
 		);
 	}
 
@@ -594,7 +594,7 @@ export default class VaultRecallPlugin extends Plugin {
 
 		if (files.length === 0) {
 			new Notice(
-							"VaultRecall SR: no legacy frontmatter review data found.",
+				"VaultRecall SR: no legacy frontmatter review data found.",
 			);
 			return;
 		}
@@ -632,7 +632,7 @@ export default class VaultRecallPlugin extends Plugin {
 	private showOrphanedRecords(): void {
 		const orphaned = this.getOrphanedRecordPaths();
 		if (orphaned.length === 0) {
-					new Notice("VaultRecall SR: no orphaned review records found.");
+			new Notice("VaultRecall SR: no orphaned review records found.");
 			return;
 		}
 
@@ -640,7 +640,7 @@ export default class VaultRecallPlugin extends Plugin {
 		const extra =
 			orphaned.length > 5 ? `\n...and ${orphaned.length - 5} more.` : "";
 		new Notice(
-					`VaultRecall SR: ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"} found.\n${preview}${extra}`,
+			`VaultRecall SR: ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"} found.\n${preview}${extra}`,
 			10000,
 		);
 	}
@@ -648,7 +648,7 @@ export default class VaultRecallPlugin extends Plugin {
 	private async pruneOrphanedRecords(): Promise<void> {
 		const orphaned = this.getOrphanedRecordPaths();
 		if (orphaned.length === 0) {
-					new Notice("VaultRecall SR: no orphaned review records to prune.");
+			new Notice("VaultRecall SR: no orphaned review records to prune.");
 			return;
 		}
 
@@ -667,7 +667,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await this.saveSettings();
 		this.updateStatusBar();
 		new Notice(
-					`VaultRecall SR: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`,
+			`VaultRecall SR: pruned ${orphaned.length} orphaned review record${orphaned.length === 1 ? "" : "s"}.`,
 		);
 	}
 
@@ -726,7 +726,7 @@ export default class VaultRecallPlugin extends Plugin {
 		await navigator.clipboard.writeText(
 			JSON.stringify(diagnostics, null, 2),
 		);
-			new Notice("VaultRecall SR: diagnostics copied to clipboard.");
+		new Notice("VaultRecall SR: diagnostics copied to clipboard.");
 	}
 
 	private getOrphanedRecordPaths(): string[] {

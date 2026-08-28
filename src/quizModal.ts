@@ -76,7 +76,7 @@ export class QuizModal extends Modal {
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : String(err);
 			statusEl.setText(`Error: ${msg}`);
-					new Notice(`VaultRecall SR quiz error: ${msg}`);
+			new Notice(`VaultRecall SR quiz error: ${msg}`);
 		}
 	}
 

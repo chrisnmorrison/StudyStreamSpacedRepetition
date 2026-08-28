@@ -6,7 +6,7 @@ export interface SRRecord {
 	updatedAt?: string;
 }
 
-export interface StudyStreamSettings {
+export interface VaultRecallSettings {
 	apiKey: string;
 	apiBaseUrl: string;
 	aiTrustedOrigin: string;
@@ -25,7 +25,7 @@ export interface StudyStreamSettings {
 	};
 }
 
-export const DEFAULT_SETTINGS: StudyStreamSettings = {
+export const DEFAULT_SETTINGS: VaultRecallSettings = {
 	apiKey: "",
 	apiBaseUrl: "https://api.openai.com/v1/chat/completions",
 	aiTrustedOrigin: "",

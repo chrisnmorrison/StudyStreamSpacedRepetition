@@ -1,5 +1,5 @@
 {
-	"name": "study-stream-sr",
+	"name": "vaultrecall-sr",
 	"version": "0.1.1",
 	"description": "Beta spaced repetition for Obsidian with SM-2 scheduling and AI quizzes.",
 	"main": "main.js",
@@ -22,10 +22,10 @@
 	"license": "0-BSD",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/chrisnmorrison/studystream.git"
+		"url": "git+https://github.com/chrisnmorrison/vaultrecall.git"
 	},
 	"bugs": {
-		"url": "https://github.com/chrisnmorrison/studystream/issues"
+		"url": "https://github.com/chrisnmorrison/vaultrecall/issues"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.30.1",

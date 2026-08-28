@@ -1,5 +1,5 @@
 import { App, Modal, Notice, TFile, requestUrl } from "obsidian";
-import { StudyStreamSettings } from "./settings";
+import { VaultRecallSettings } from "./settings";
 import { RATING_BUTTONS } from "./constants";
 import { sanitizeQuizMarkdown } from "./quizSafety";
 
@@ -16,7 +16,7 @@ export class QuizModal extends Modal {
 	constructor(
 		app: App,
 		private file: TFile,
-		private settings: StudyStreamSettings,
+		private settings: VaultRecallSettings,
 		private onRate?: (quality: number, filePath: string) => void,
 		private requestToken = "",
 	) {
@@ -76,7 +76,7 @@ export class QuizModal extends Modal {
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : String(err);
 			statusEl.setText(`Error: ${msg}`);
-			new Notice(`StudyStream SR quiz error: ${msg}`);
+					new Notice(`VaultRecall SR quiz error: ${msg}`);
 		}
 	}
 

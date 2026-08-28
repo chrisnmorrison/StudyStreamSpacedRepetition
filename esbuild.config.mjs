@@ -43,7 +43,7 @@ const context = await esbuild.context({
 
 if (prod) {
 	await context.rebuild();
-	const pluginId = "studystream";
+	const pluginId = "vaultrecall";
 	console.log(`
 Build complete. To install manually:
 
@@ -55,7 +55,7 @@ Build complete. To install manually:
        manifest.json
        styles.css
   5. In Obsidian: Settings → Community plugins → reload, then enable
-	   "StudyStream SR".
+	   "VaultRecall SR".
 `);
 	process.exit(0);
 } else {

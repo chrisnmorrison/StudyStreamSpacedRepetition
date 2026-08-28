@@ -101,7 +101,7 @@ export class ReviewSession {
 			await this.saveRecords();
 		} catch {
 			new Notice(
-				"StudyStream SR: could not undo - failed to restore review data.",
+							"VaultRecall SR: could not undo - failed to restore review data.",
 			);
 			return false;
 		}
@@ -146,7 +146,7 @@ export class ReviewSession {
 			}
 			this.undoState = null;
 			new Notice(
-				`StudyStream SR: failed to update review data for "${file.basename}".`,
+							`VaultRecall SR: failed to update review data for "${file.basename}".`,
 			);
 			throw new Error("Failed to save review data.");
 		}
